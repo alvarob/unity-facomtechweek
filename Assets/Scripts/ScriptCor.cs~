@@ -1,0 +1,19 @@
+﻿using UnityEngine;
+using System.Collections;
+
+public class ScriptCor : MonoBehaviour {
+
+	// Variável pública para escolher a cor,
+	// por ser pública, o seletor de cor aparece
+	// no 'Inspector' do Unity
+	public Color cor; 
+
+	// 'MeshRenderer' é a classe responsável por desenhar
+	// objetos na tela
+	MeshRenderer rend; 
+
+	void Awake() {
+		rend = GetComponent<MeshRenderer>();
+		rend.material.color = cor;
+	}
+}
