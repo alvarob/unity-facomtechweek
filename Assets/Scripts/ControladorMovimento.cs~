@@ -8,8 +8,14 @@ public class ControladorMovimento : MonoBehaviour {
 	Rigidbody body;
 	Vector3 movement;
 
+	float distanciaRaio = 100f;
+	int mascaraChao;
+
 	void Awake() {
 		body = GetComponent<Rigidbody>();
+
+		// Salva qual é o layer "chão" para dar o Raycast no Virar()
+		mascaraChao = LayerMask.GetMask("Chao");
 	}
 
 	void FixedUpdate() {
@@ -22,6 +28,7 @@ public class ControladorMovimento : MonoBehaviour {
 		float v = Input.GetAxisRaw("Vertical");
 
 		Mover(h, v);
+		Virar();
 	}
 
 	void Mover(float h, float v) {
@@ -36,6 +43,24 @@ public class ControladorMovimento : MonoBehaviour {
 		// Somamos isso ao vetor "movement" obtido acima
 		// para mover o personagem.
 		body.MovePosition(transform.position + movement);
+	}
+
+	void Virar() {
+		// Raio partindo da câmera do ponto onde o mouse está
+		Ray raio = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+		// 'Hit' que guardará a informação de onde o raio acertou
+		RaycastHit hitChao;
+
+		// Dá cast no raio, salvando a informação do hit em hitChao
+		// usamos a mascaraChao pra ele só acertar o que estiver no layer "Chão"
+		if (Physics.Raycast(raio, out hitChao, distanciaRaio, mascaraChao)) {
+			Vector3 direcaoVirada = hitChao.point - transform.position;
+			direcaoVirada.y = 0f;
+
+			Quaternion novaRotacao = Quaternion.LookRotation(direcaoVirada);
+			body.MoveRotation(novaRotacao);
+		}
 	}
 
 }

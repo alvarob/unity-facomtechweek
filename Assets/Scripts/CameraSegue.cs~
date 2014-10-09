@@ -1,0 +1,19 @@
+﻿using UnityEngine;
+using System.Collections;
+
+public class CameraSegue : MonoBehaviour {
+
+	public Transform alvo;
+	public float smoothing = 5f;
+
+	Vector3 distanciaDoAlvo;
+
+	void Start() {
+		distanciaDoAlvo = transform.position - alvo.position;
+	}
+	
+	void FixedUpdate() {
+		Vector3 posicaoAlvo = alvo.position + distanciaDoAlvo;
+		transform.position = Vector3.Lerp(transform.position, posicaoAlvo, smoothing * Time.deltaTime);
+	}
+}
